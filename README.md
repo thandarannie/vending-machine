@@ -10,6 +10,7 @@ Requirements: PHP 8.1+ (`pdo_mysql`), MySQL, Composer, Apache with `mod_rewrite`
 
 ```bash
 composer install
+cp config/config.example.php config/config.php   # then fill in your DB login + jwt_secret
 mysql -u root -p < database/schema.sql
 php database/seed_users.php
 ```
