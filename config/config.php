@@ -1,11 +1,11 @@
 <?php
 return [
-    'db_host' => '163.44.198.64',
-    'db_port' => '3306',
-    'db_name' => 'cp539120_vending_machine',
-    'db_user' => 'cp539120_vm',
-    'db_pass' => '0-Q}LX*_pAbV',
+    'db_host' => '127.0.0.1',
+    'db_port' => '8889',
+    'db_name' => 'vm_db',
+    'db_user' => 'root',
+    'db_pass' => 'root',
 
-    'jwt_secret' => '32835a0897d9a282371c9aba697e5ca5cf08a458a53b429360d9cfe422fa58a5',
+    'jwt_secret' => '7b75f0b498906b00a585ee4442373c441dd578b3f9f09a9d3d3ae01a0ba17c80',
     'jwt_ttl'    => 3600,
 ];

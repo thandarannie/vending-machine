@@ -24,6 +24,7 @@ require __DIR__ . '/src/Controllers/ApiController.php';
 require __DIR__ . '/src/Controllers/ProductsController.php';
 require __DIR__ . '/src/Controllers/AuthController.php';
 require __DIR__ . '/src/Controllers/TransactionsController.php';
+require __DIR__ . '/src/Controllers/UsersController.php';
 require __DIR__ . '/src/Controllers/ProductsApiController.php';
 require __DIR__ . '/src/Controllers/AuthApiController.php';
 require __DIR__ . '/src/Controllers/TransactionsApiController.php';
@@ -53,6 +54,7 @@ $userRepo     = new UserRepository($pdo);
 $products = new ProductsController($productRepo, $txRepo);
 $auth     = new AuthController($userRepo);
 $history  = new TransactionsController($txRepo);
+$users    = new UsersController($userRepo);
 
 $productsApi = new ProductsApiController($productRepo, $txRepo);
 $authApi     = new AuthApiController($userRepo);

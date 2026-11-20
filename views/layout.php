@@ -20,6 +20,7 @@ $me = Auth::user();
 
         <?php if (Auth::isAdmin()): ?>
             <a href="<?= url('/products/create') ?>">+ New product</a>
+            <a href="<?= url('/users') ?>">Users</a>
         <?php endif; ?>
 
         <?php if ($me): ?>

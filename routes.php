@@ -10,6 +10,13 @@ $router->post('/products/{id}/delete', [$products, 'delete'],      'admin');
 
 $router->addAttributeRoutes($products);
 
+$router->get('/users',                 [$users, 'index'],          'admin');
+$router->get('/users/create',          [$users, 'create'],         'admin');
+$router->post('/users',                [$users, 'store'],          'admin');
+$router->get('/users/{id}/edit',       [$users, 'edit'],           'admin');
+$router->post('/users/{id}',           [$users, 'update'],         'admin');
+$router->post('/users/{id}/delete',    [$users, 'delete'],         'admin');
+
 $router->get('/transactions',          [$history, 'index'],        'login');
 
 $router->get('/login',                 [$auth, 'showLogin']);
