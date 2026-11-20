@@ -10,7 +10,7 @@
     },
     "autoload": {
         "classmap": ["src/"],
-        "files": ["src/helpers.php"]
+        "files": ["src/Core/helpers.php"]
     },
     "scripts": {
         "test": "phpunit"

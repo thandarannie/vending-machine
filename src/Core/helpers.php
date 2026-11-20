@@ -12,7 +12,7 @@ function url(string $path = '/'): string
 function config(string $key): mixed
 {
     static $config = null;                                   // load the file only once
-    $config ??= require __DIR__ . '/../config/config.php';
+    $config ??= require __DIR__ . '/../../config/config.php';
     return $config[$key] ?? null;
 }
 

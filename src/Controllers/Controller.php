@@ -11,14 +11,14 @@ abstract class Controller
         extract($data); // turns ['products' => ...] into $products
 
         ob_start();
-        require __DIR__ . '/../views/' . $view . '.php';
+        require __DIR__ . '/../../views/' . $view . '.php';
         $content = ob_get_clean();
 
         // read the flash message once, then remove it
         $flash = $_SESSION['flash'] ?? null;
         unset($_SESSION['flash']);
 
-        require __DIR__ . '/../views/layout.php';
+        require __DIR__ . '/../../views/layout.php';
     }
 
     // save a one-time message to show on the next page

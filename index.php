@@ -5,25 +5,32 @@ if (PHP_SAPI === 'cli-server' && is_file(__DIR__ . parse_url($_SERVER['REQUEST_U
 
 session_start();
 
-require __DIR__ . '/src/helpers.php';
-require __DIR__ . '/src/Database.php';
-require __DIR__ . '/src/Auth.php';
-require __DIR__ . '/src/JWT.php';
-require __DIR__ . '/src/Route.php';
-require __DIR__ . '/src/Router.php';
-require __DIR__ . '/src/Controller.php';
-require __DIR__ . '/src/ApiController.php';
-require __DIR__ . '/src/ProductRepository.php';
-require __DIR__ . '/src/TransactionRepository.php';
-require __DIR__ . '/src/UserRepository.php';
-require __DIR__ . '/src/ProductValidator.php';
-require __DIR__ . '/src/PurchaseService.php';
-require __DIR__ . '/src/ProductsController.php';
-require __DIR__ . '/src/AuthController.php';
-require __DIR__ . '/src/TransactionsController.php';
-require __DIR__ . '/src/ProductsApiController.php';
-require __DIR__ . '/src/AuthApiController.php';
-require __DIR__ . '/src/TransactionsApiController.php';
+// Core: routing, auth, helpers (load first — other classes build on these)
+require __DIR__ . '/src/Core/helpers.php';
+require __DIR__ . '/src/Core/Auth.php';
+require __DIR__ . '/src/Core/JWT.php';
+require __DIR__ . '/src/Core/Route.php';
+require __DIR__ . '/src/Core/Router.php';
+
+// Repositories: database + data access
+require __DIR__ . '/src/Repositories/Database.php';
+require __DIR__ . '/src/Repositories/ProductRepository.php';
+require __DIR__ . '/src/Repositories/TransactionRepository.php';
+require __DIR__ . '/src/Repositories/UserRepository.php';
+
+// Services: business logic
+require __DIR__ . '/src/Services/ProductValidator.php';
+require __DIR__ . '/src/Services/PurchaseService.php';
+
+// Controllers: base classes first, then web + API controllers
+require __DIR__ . '/src/Controllers/Controller.php';
+require __DIR__ . '/src/Controllers/ApiController.php';
+require __DIR__ . '/src/Controllers/ProductsController.php';
+require __DIR__ . '/src/Controllers/AuthController.php';
+require __DIR__ . '/src/Controllers/TransactionsController.php';
+require __DIR__ . '/src/Controllers/ProductsApiController.php';
+require __DIR__ . '/src/Controllers/AuthApiController.php';
+require __DIR__ . '/src/Controllers/TransactionsApiController.php';
 
 define('BASE_URL', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
 
