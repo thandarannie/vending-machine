@@ -3,7 +3,7 @@ class Auth
 {
     public static function login(array $user): void
     {
-        session_regenerate_id(true); // new session id after login (stops session fixation attacks)
+        session_regenerate_id(true);
 
         $_SESSION['user'] = [
             'id'       => (int) $user['id'],

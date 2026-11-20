@@ -9,8 +9,6 @@ class AuthApiController extends ApiController
         $this->users = $users;
     }
 
-    // POST /api/login   body: {"username": "admin", "password": "admin123"}
-    // gives back a token to send with the next requests
     public function login(): void
     {
         $input    = $this->input();
@@ -28,11 +26,11 @@ class AuthApiController extends ApiController
 
         $ttl   = config('jwt_ttl');
         $token = JWT::encode([
-            'sub'      => (int) $user['id'],  // "subject" = who this token belongs to
+            'sub'      => (int) $user['id'],
             'username' => $user['username'],
             'role'     => $user['role'],
-            'iat'      => time(),             // issued at
-            'exp'      => time() + $ttl,      // expires at
+            'iat'      => time(),
+            'exp'      => time() + $ttl,
         ], config('jwt_secret'));
 
         $this->json([
@@ -43,7 +41,6 @@ class AuthApiController extends ApiController
         ]);
     }
 
-    // GET /api/me   -> who am I? (needs a token)
     public function me(): void
     {
         $user = $this->requireUser();

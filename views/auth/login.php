@@ -26,7 +26,6 @@
 </div>
 
 <script>
-    // client-side check: both fields must be filled in
     document.getElementById('login-form').addEventListener('submit', function (event) {
         var ok = true;
 
@@ -34,7 +33,7 @@
             var input = document.getElementById(name);
             var error = document.getElementById(name + '-error');
             var empty = input.value.trim() === '';
-            var label = name.charAt(0).toUpperCase() + name.slice(1);   // "username" -> "Username"
+            var label = name.charAt(0).toUpperCase() + name.slice(1);
 
             error.textContent = empty ? label + ' is required.' : '';
             input.classList.toggle('input-error', empty);
@@ -42,7 +41,7 @@
         });
 
         if (!ok) {
-            event.preventDefault(); // do not send the form
+            event.preventDefault();
         }
     });
 </script>

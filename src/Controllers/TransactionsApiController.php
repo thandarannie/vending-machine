@@ -9,8 +9,6 @@ class TransactionsApiController extends ApiController
         $this->transactions = $transactions;
     }
 
-    // GET /api/transactions   (logged in)
-    // admin = all purchases, user = only their own
     public function index(): void
     {
         $user = $this->requireUser();

@@ -1,6 +1,5 @@
 <?php
 
-// REST API for products (Task 16)
 class ProductsApiController extends ApiController
 {
     private ProductRepository $products;
@@ -12,10 +11,9 @@ class ProductsApiController extends ApiController
         $this->purchases = new PurchaseService($products, $transactions);
     }
 
-    // GET /api/products?page=1&per_page=10&sort=price&dir=desc   (public)
     public function index(): void
     {
-        $perPage    = max(1, min(50, (int) ($_GET['per_page'] ?? 10))); // 1..50
+        $perPage    = max(1, min(50, (int) ($_GET['per_page'] ?? 10)));
         $total      = $this->products->count();
         $totalPages = max(1, (int) ceil($total / $perPage));
         $page       = max(1, min((int) ($_GET['page'] ?? 1), $totalPages));
@@ -39,13 +37,11 @@ class ProductsApiController extends ApiController
         ]);
     }
 
-    // GET /api/products/{id}   (public)
     public function show(int $id): void
     {
         $this->json($this->productJson($this->findOr404($id)));
     }
 
-    // POST /api/products   (admin)   body: {"name": "Water", "price": 0.5, "quantity_available": 20}
     public function store(): void
     {
         $this->requireUser('admin');
@@ -58,10 +54,9 @@ class ProductsApiController extends ApiController
 
         $id = $this->products->create($data);
 
-        $this->json($this->productJson($this->products->find($id)), 201); // 201 = Created
+        $this->json($this->productJson($this->products->find($id)), 201);
     }
 
-    // PUT /api/products/{id}   (admin)   body: same as POST
     public function update(int $id): void
     {
         $this->requireUser('admin');
@@ -78,7 +73,6 @@ class ProductsApiController extends ApiController
         $this->json($this->productJson($this->products->find($id)));
     }
 
-    // DELETE /api/products/{id}   (admin)
     public function destroy(int $id): void
     {
         $this->requireUser('admin');
@@ -87,14 +81,13 @@ class ProductsApiController extends ApiController
         try {
             $this->products->delete($id);
         } catch (PDOException $e) {
-            $this->error("Can't delete {$product['name']}: it has purchase history.", 409); // 409 = Conflict
+            $this->error("Can't delete {$product['name']}: it has purchase history.", 409);
         }
 
-        http_response_code(204); // 204 = deleted, nothing to send back
+        http_response_code(204);
         exit;
     }
 
-    // POST /api/products/{id}/purchase   (logged in)   body: {"quantity": 2}
     public function purchase(int $id): void
     {
         $user    = $this->requireUser();

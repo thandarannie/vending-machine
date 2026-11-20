@@ -1,14 +1,11 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # pass the "Authorization: Bearer <token>" header to PHP (some Apache setups drop it)
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # block the browser from code folders (only assets/ should be public)
     RewriteRule ^(vendor|tests|src|config|database|views)(/|$) - [F,L]
     RewriteRule ^(composer\.(json|lock)|phpunit\.xml|routes\.php)$ - [F,L]
 
-    # send every other URL to index.php, except real files like assets/style.css
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^ index.php [QSA,L]

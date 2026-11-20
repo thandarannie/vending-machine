@@ -2,7 +2,7 @@
 /** @var string $title */
 /** @var string $content  the page body */
 /** @var string|null $flash  one-time message */
-$me = Auth::user(); // logged-in user, or null
+$me = Auth::user();
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -9,7 +9,6 @@ class TransactionsController extends Controller
         $this->transactions = $transactions;
     }
 
-    // admin = every purchase, user = only their own purchases
     public function index(): void
     {
         if (Auth::isAdmin()) {

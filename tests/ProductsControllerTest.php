@@ -25,7 +25,6 @@ class ProductsControllerTest extends TestCase
     private TransactionRepository&MockObject $transactions;
     private TestProductsController $controller;
 
-    // runs before EVERY test: fresh mocks, empty request
     protected function setUp(): void
     {
         $this->products     = $this->createMock(ProductRepository::class);
@@ -36,10 +35,6 @@ class ProductsControllerTest extends TestCase
         $_POST = [];
         $_SESSION = [];
     }
-
-    // ================================================================
-    // index (list + pagination + sorting)
-    // ================================================================
 
     public function test_index_shows_first_page_sorted_by_id(): void
     {
@@ -53,7 +48,7 @@ class ProductsControllerTest extends TestCase
 
         $this->assertSame('products/index', $this->controller->rendered['view']);
         $this->assertSame([self::COKE], $this->controller->rendered['data']['products']);
-        $this->assertSame(3, $this->controller->rendered['data']['totalPages']); // 12 products / 5 = 3 pages
+        $this->assertSame(3, $this->controller->rendered['data']['totalPages']);
     }
 
     public function test_index_page_too_big_goes_to_last_page(): void
@@ -109,10 +104,6 @@ class ProductsControllerTest extends TestCase
         $this->controller->index();
     }
 
-    // ================================================================
-    // create + store
-    // ================================================================
-
     public function test_create_shows_empty_form(): void
     {
         $this->controller->create();
@@ -128,7 +119,7 @@ class ProductsControllerTest extends TestCase
 
         $this->products->expects($this->once())
             ->method('create')
-            ->with(['name' => 'Water', 'price' => '0.5', 'quantity_available' => '20']); // name is trimmed
+            ->with(['name' => 'Water', 'price' => '0.5', 'quantity_available' => '20']);
 
         $this->controller->store();
 
@@ -162,7 +153,7 @@ class ProductsControllerTest extends TestCase
 
     public function test_store_with_missing_post_fields_shows_errors(): void
     {
-        $_POST = []; // nothing sent at all
+        $_POST = [];
         $this->products->expects($this->never())->method('create');
 
         $this->controller->store();
@@ -219,13 +210,8 @@ class ProductsControllerTest extends TestCase
 
         $this->controller->store();
 
-        // the form shows what the user typed, so they don't have to type it again
         $this->assertSame('Coke', $this->controller->rendered['data']['product']['name']);
     }
-
-    // ================================================================
-    // edit + update
-    // ================================================================
 
     public function test_edit_shows_form_with_product(): void
     {
@@ -281,10 +267,6 @@ class ProductsControllerTest extends TestCase
         $this->controller->update(999);
     }
 
-    // ================================================================
-    // delete
-    // ================================================================
-
     public function test_delete_removes_product(): void
     {
         $this->products->method('find')->willReturn(self::COKE);
@@ -299,7 +281,7 @@ class ProductsControllerTest extends TestCase
     public function test_delete_product_with_purchases_shows_message_instead_of_crashing(): void
     {
         $this->products->method('find')->willReturn(self::COKE);
-        // pretend the database blocks it (foreign key)
+
         $this->products->method('delete')->willThrowException(new PDOException('foreign key'));
 
         $this->controller->delete(1);
@@ -317,10 +299,6 @@ class ProductsControllerTest extends TestCase
         $this->controller->delete(999);
     }
 
-    // ================================================================
-    // showPurchase (SEO url)
-    // ================================================================
-
     public function test_show_purchase_with_correct_url_shows_buy_page(): void
     {
         $this->products->method('find')->willReturn(self::COKE);
@@ -328,7 +306,7 @@ class ProductsControllerTest extends TestCase
         $this->controller->showPurchase(1, 'coke');
 
         $this->assertSame('products/purchase', $this->controller->rendered['view']);
-        $this->assertSame(1, $this->controller->rendered['data']['quantity']); // default quantity
+        $this->assertSame(1, $this->controller->rendered['data']['quantity']);
     }
 
     public function test_show_purchase_with_wrong_name_redirects_301_to_correct_url(): void
@@ -345,7 +323,7 @@ class ProductsControllerTest extends TestCase
     {
         $this->products->method('find')->willReturn(self::COKE);
 
-        $this->controller->showPurchase(1); // /products/1/purchase (no name)
+        $this->controller->showPurchase(1);
 
         $this->assertSame(301, $this->controller->redirected['status']);
     }
@@ -357,10 +335,6 @@ class ProductsControllerTest extends TestCase
         $this->expectException(NotFoundException::class);
         $this->controller->showPurchase(999, 'coke');
     }
-
-    // ================================================================
-    // purchase (Task 6: update stock + log transaction)
-    // ================================================================
 
     private function loginAs(int $userId): void
     {
@@ -374,7 +348,7 @@ class ProductsControllerTest extends TestCase
         $this->products->method('find')->willReturn(self::COKE);
 
         $this->products->expects($this->once())->method('decreaseQuantity')->with(1, 2)->willReturn(true);
-        $this->transactions->expects($this->once())->method('create')->with(2, 1, 2, '7.980'); // user 2, Coke, 2 × 3.990
+        $this->transactions->expects($this->once())->method('create')->with(2, 1, 2, '7.980');
 
         $this->controller->purchase(1, 'coke');
 
@@ -389,7 +363,7 @@ class ProductsControllerTest extends TestCase
         $this->products->method('find')->willReturn(self::PEPSI);
         $this->products->method('decreaseQuantity')->willReturn(true);
 
-        $this->transactions->expects($this->once())->method('create')->with(2, 2, 3, '20.655'); // 3 × 6.885
+        $this->transactions->expects($this->once())->method('create')->with(2, 2, 3, '20.655');
 
         $this->controller->purchase(2, 'pepsi');
     }
@@ -397,7 +371,7 @@ class ProductsControllerTest extends TestCase
     public function test_purchase_whole_stock_is_allowed(): void
     {
         $this->loginAs(2);
-        $_POST['quantity'] = '10'; // exactly what is in stock
+        $_POST['quantity'] = '10';
         $this->products->method('find')->willReturn(self::COKE);
         $this->products->expects($this->once())->method('decreaseQuantity')->with(1, 10)->willReturn(true);
 
@@ -424,7 +398,6 @@ class ProductsControllerTest extends TestCase
         $_POST['quantity'] = $quantity;
         $this->products->method('find')->willReturn(self::COKE);
 
-        // nothing may change in the database
         $this->products->expects($this->never())->method('decreaseQuantity');
         $this->transactions->expects($this->never())->method('create');
 
@@ -437,7 +410,7 @@ class ProductsControllerTest extends TestCase
     {
         $this->loginAs(2);
         $_POST['quantity'] = '11';
-        $this->products->method('find')->willReturn(self::COKE); // stock 10
+        $this->products->method('find')->willReturn(self::COKE);
         $this->products->expects($this->never())->method('decreaseQuantity');
         $this->transactions->expects($this->never())->method('create');
 
@@ -460,14 +433,13 @@ class ProductsControllerTest extends TestCase
 
     public function test_purchase_when_someone_else_bought_it_first_logs_nothing(): void
     {
-        // the page said 10 in stock, but another buyer took them a moment ago,
-        // so the database update fails (decreaseQuantity returns false)
+
         $this->loginAs(2);
         $_POST['quantity'] = '5';
         $this->products->method('find')->willReturn(self::COKE);
         $this->products->method('decreaseQuantity')->willReturn(false);
 
-        $this->transactions->expects($this->never())->method('create'); // no transaction for a failed purchase
+        $this->transactions->expects($this->never())->method('create');
 
         $this->controller->purchase(1, 'coke');
 

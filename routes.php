@@ -16,7 +16,6 @@ $router->get('/login',                 [$auth, 'showLogin']);
 $router->post('/login',                [$auth, 'login']);
 $router->post('/logout',               [$auth, 'logout']);
 
-// ---------- REST API  + JWT  ----------
 $router->post('/api/login',                       [$authApi, 'login']);
 $router->get('/api/me',                           [$authApi, 'me']);
 

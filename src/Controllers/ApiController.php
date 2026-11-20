@@ -1,9 +1,6 @@
 <?php
-
-// Shared helpers for all API controllers: JSON in, JSON out, token check.
 abstract class ApiController
 {
-    // send JSON and stop
     protected function json(mixed $data, int $status = 200): never
     {
         http_response_code($status);
@@ -12,22 +9,17 @@ abstract class ApiController
         exit;
     }
 
-    // send an error as JSON: {"error": "..."}
     protected function error(string $message, int $status, array $extra = []): never
     {
         $this->json(['error' => $message] + $extra, $status);
     }
 
-    // read the request body: JSON {"name": "Coke"} (or a normal form post)
     protected function input(): array
     {
         $data = json_decode(file_get_contents('php://input'), true);
         return is_array($data) ? $data : $_POST;
     }
 
-    // ---------- Task 17: JWT check ----------
-    // reads "Authorization: Bearer <token>" and returns the user from the token.
-    // $role = 'admin' -> only admins may continue
     protected function requireUser(?string $role = null): array
     {
         $header = $_SERVER['HTTP_AUTHORIZATION'] ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] ?? '';
@@ -45,10 +37,9 @@ abstract class ApiController
             $this->error('Only admins can do this.', 403);
         }
 
-        return $user; // ['sub' => user id, 'username' => ..., 'role' => ...]
+        return $user;
     }
 
-    // a product with real number types (the database gives strings like "3.990")
     protected function productJson(array $product): array
     {
         return [

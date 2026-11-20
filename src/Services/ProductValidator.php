@@ -1,10 +1,8 @@
 <?php
 
-// Product input rules (Task 12), shared by the web form AND the API.
 class ProductValidator
 {
-    // take only the 3 fields we need, as trimmed strings
-    // (the API may send numbers like 6.885, the form sends strings like "6.885")
+
     public static function clean(array $input): array
     {
         return [
@@ -14,8 +12,6 @@ class ProductValidator
         ];
     }
 
-    // all fields required, price > 0, quantity >= 0
-    // returns ['field' => 'message'], or [] when everything is OK
     public static function validate(array $data): array
     {
         $errors = [];

@@ -7,8 +7,6 @@
 <div class="card narrow">
     <h1><?= htmlspecialchars($title) ?></h1>
 
-    <!-- required / min / step = client-side validation rules -->
-    <!-- novalidate = turn off the browser's popup, our JavaScript below shows the errors instead -->
     <form id="product-form" method="post" action="<?= url($action) ?>" novalidate>
 
         <div class="field">
@@ -40,8 +38,6 @@
 <script>
     var form = document.getElementById('product-form');
 
-    // 1. one check per field: return an error message, or '' if OK
-    //    (same rules as validate() in ProductsController)
     var rules = {
         name: function (value) {
             if (value === '') return 'Name is required.';
@@ -54,30 +50,36 @@
         },
         quantity_available: function (value) {
             if (value === '') return 'Quantity is required.';
-            if (!/^\d+$/.test(value)) return 'Quantity must be a whole number, 0 or more.'; // only digits, so no "1.5" or "-2"
+            if (!/^\d+$/.test(value)) return 'Quantity must be a whole number, 0 or more.';
             return '';
         }
     };
 
-    // 2. check one field, show or clear its error, return true if OK
     function checkField(name) {
         var input   = document.getElementById(name);
         var error   = document.getElementById(name + '-error');
         var message = rules[name](input.value.trim());
 
         error.textContent = message;
-        input.classList.toggle('input-error', message !== ''); // red border when wrong
+        input.classList.toggle('input-error', message !== '');
         return message === '';
     }
 
-    // 3. check a field when the user leaves it
     Object.keys(rules).forEach(function (name) {
-        document.getElementById(name).addEventListener('blur', function () {
+        var input = document.getElementById(name);
+        var error = document.getElementById(name + '-error');
+
+        input.addEventListener('blur', function () {
             checkField(name);
+        });
+
+        input.addEventListener('input', function () {
+            if (error.textContent !== '') {
+                checkField(name);
+            }
         });
     });
 
-    // 4. on submit: check all fields, stop the form if any is wrong
     form.addEventListener('submit', function (event) {
         var allOk = true;
 
@@ -88,8 +90,8 @@
         });
 
         if (!allOk) {
-            event.preventDefault();                          // do not send the form
-            form.querySelector('.input-error').focus();      // jump to the first wrong field
+            event.preventDefault();
+            form.querySelector('.input-error').focus();
         }
     });
 </script>

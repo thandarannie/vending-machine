@@ -1,7 +1,7 @@
 <?php
 /** @var string $title */
 /** @var array $transactions */
-$total = array_sum(array_column($transactions, 'total_price')); // money spent in all rows
+$total = array_sum(array_column($transactions, 'total_price'));
 ?>
 <div class="card">
     <h1><?= htmlspecialchars($title) ?></h1>

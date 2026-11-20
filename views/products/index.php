@@ -6,8 +6,6 @@
 /** @var string $sort  column we sort by, e.g. 'price' */
 /** @var string $dir   'asc' or 'desc' */
 
-// link to the product list, keeping the current sort
-// listUrl(2) -> /vm/products?sort=price&dir=desc&page=2
 $listUrl = function (int $page, ?string $sortBy = null, ?string $direction = null) use ($sort, $dir): string {
     return url('/products?' . http_build_query([
         'sort' => $sortBy ?? $sort,
@@ -16,13 +14,11 @@ $listUrl = function (int $page, ?string $sortBy = null, ?string $direction = nul
     ]));
 };
 
-// clickable column header: click once = A→Z, click again = Z→A
 $sortHeader = function (string $column, string $label) use ($sort, $dir, $listUrl): string {
     $isCurrent = $sort === $column;
-    $nextDir   = ($isCurrent && $dir === 'asc') ? 'desc' : 'asc'; // flip direction if already sorted by this column
+    $nextDir   = ($isCurrent && $dir === 'asc') ? 'desc' : 'asc';
     $arrow     = $isCurrent ? ($dir === 'asc' ? ' ▲' : ' ▼') : '';
 
-    // back to page 1 when the sort changes
     return '<a class="sort' . ($isCurrent ? ' active' : '') . '" href="' . $listUrl(1, $column, $nextDir) . '">'
          . $label . $arrow . '</a>';
 };
