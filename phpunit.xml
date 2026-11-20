@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PHPUnit settings. Run tests with:  vendor/bin/phpunit -->
+<phpunit bootstrap="tests/bootstrap.php" colors="true" testdox="true">
+    <testsuites>
+        <testsuite name="Vending Machine">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
